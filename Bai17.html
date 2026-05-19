@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài Lab 17 - Giỏ hàng hiện đại</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f8fafc; color: #334155; padding: 40px 20px; }
+        .cart-container { max-width: 650px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
+        
+        h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; text-align: center; color: #1e293b; }
+        
+        .product-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #f1f5f9; }
+        .product-item:last-of-type { border-bottom: none; }
+        
+        .p-info { display: flex; align-items: center; gap: 15px; }
+        .p-img { width: 50px; height: 50px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .p-name { font-weight: 600; color: #334155; font-size: 1rem; margin-bottom: 4px; }
+        .p-price { color: #64748b; font-size: 0.9rem; }
+        
+        .quantity-control { display: flex; align-items: center; background: #f1f5f9; padding: 4px; border-radius: 10px; }
+        .quantity-control button { width: 32px; height: 32px; border: none; background: white; border-radius: 8px; font-weight: bold; cursor: pointer; color: #475569; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: background 0.2s; }
+        .quantity-control button:hover { background: #e2e8f0; }
+        .quantity-input { width: 40px; text-align: center; border: none; background: transparent; font-weight: 600; color: #1e293b; font-size: 0.95rem; }
+        
+        .subtotal { font-weight: 700; color: #0f172a; min-width: 100px; text-align: right; font-size: 1rem; }
+        
+        .total-section { margin-top: 25px; padding-top: 20px; border-top: 2px dashed #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .total-title { font-size: 1.1rem; font-weight: 600; color: #64748b; }
+        .total-price { font-size: 1.6rem; font-weight: 800; color: #ef4444; }
+    </style>
+</head>
+<body>
+
+<div class="cart-container">
+    <h2>🛒 Giỏ Hàng Của Bạn</h2>
+    
+    <!-- Sản phẩm 1 -->
+    <div class="product-item" data-price="150000">
+        <div class="p-info">
+            <div class="p-img">📱</div>
+            <div>
+                <div class="p-name">Điện thoại Nokia Cổ</div>
+                <div class="p-price">150,000 đ</div>
+            </div>
+        </div>
+        <div class="quantity-control">
+            <button class="btn-minus">-</button>
+            <input type="text" class="quantity-input" value="1" readonly>
+            <button class="btn-plus">+</button>
+        </div>
+        <div class="subtotal">150,000 đ</div>
+    </div>
+
+    <!-- Sản phẩm 2 -->
+    <div class="product-item" data-price="450000">
+        <div class="p-info">
+            <div class="p-img">🎧</div>
+            <div>
+                <div class="p-name">Tai nghe Bluetooth Air</div>
+                <div class="p-price">450,000 đ</div>
+            </div>
+        </div>
+        <div class="quantity-control">
+            <button class="btn-minus">-</button>
+            <input type="text" class="quantity-input" value="1" readonly>
+            <button class="btn-plus">+</button>
+        </div>
+        <div class="subtotal">450,000 đ</div>
+    </div>
+
+    <!-- Tổng hóa đơn -->
+    <div class="total-section">
+        <span class="total-title">Tổng cộng toán bộ:</span>
+        <span class="total-price"><span id="cart-total-price">600,000</span> đ</span>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    function calculateCart() {
+        let totalCart = 0;
+        $('.product-item').each(function() {
+            let price = parseInt($(this).data('price'));
+            let qty = parseInt($(this).find('.quantity-input').val());
+            let subtotal = price * qty;
+            totalCart += subtotal;
+            $(this).find('.subtotal').text(subtotal.toLocaleString('vi-VN') + " đ");
+        });
+        $('#cart-total-price').text(totalCart.toLocaleString('vi-VN'));
+    }
+
+    $('.btn-plus').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        input.val(parseInt(input.val()) + 1);
+        calculateCart();
+    });
+
+    $('.btn-minus').click(function() {
+        let input = $(this).siblings('.quantity-input');
+        let currentVal = parseInt(input.val());
+        if (currentVal > 1) {
+            input.val(currentVal - 1);
+            calculateCart();
+        } else {
+            alert("Số lượng tối thiểu phải là 1!");
+        }
+    });
+});
+</script>
+</body>
+</html>

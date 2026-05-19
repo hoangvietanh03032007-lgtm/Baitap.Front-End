@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài Lab 16 - Bộ đếm hiện đại</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #e0eafc, #cfdef3); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        .counter-card { background: #ffffff; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.8); }
+        h2 { color: #334155; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; }
+        
+        #counter-value { font-size: 5.5rem; font-weight: 800; margin: 20px 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
+        
+        /* Trạng thái màu sắc chuyển động mượt */
+        .zero { color: #64748b; text-shadow: 0 4px 12px rgba(100,116,139,0.2); }
+        .positive { color: #10b981; transform: scale(1.05); text-shadow: 0 4px 15px rgba(16,185,129,0.3); }
+        .negative { color: #ef4444; transform: scale(0.95); text-shadow: 0 4px 15px rgba(239,68,68,0.3); }
+        
+        .button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        button { padding: 14px; font-size: 0.95rem; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        
+        button:active { transform: scale(0.96); }
+        .btn-dec { background: #fee2e2; color: #ef4444; }
+        .btn-dec:hover { background: #fca5a5; }
+        .btn-inc { background: #dcfce7; color: #10b981; }
+        .btn-inc:hover { background: #86efac; }
+        .btn-reset { background: #f1f5f9; color: #64748b; grid-column: span 2; }
+        .btn-reset:hover { background: #e2e8f0; }
+        .btn-fast { background: #dbeafe; color: #3b82f6; grid-column: span 2; }
+        .btn-fast:hover { background: #93c5fd; }
+    </style>
+</head>
+<body>
+
+<div class="counter-card">
+    <h2>Interaction Counter</h2>
+    <div id="counter-value" class="zero">0</div>
+    
+    <div class="button-group">
+        <button class="btn-dec" id="btn-decrease">➖ Giảm</button>
+        <button class="btn-inc" id="btn-increase">➕ Tăng</button>
+        <button class="btn-fast" id="btn-fast-increase">⚡ Tăng nhanh (+10)</button>
+        <button class="btn-reset" id="btn-reset">🔄 Đặt lại</button>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    let count = 0;
+    const MIN_VALUE = 0; // Đổi thành null nếu muốn cho phép số âm
+
+    function updateUI() {
+        $('#counter-value').text(count);
+        if (count > 0) {
+            $('#counter-value').attr('class', 'positive');
+        } else if (count < 0) {
+            $('#counter-value').attr('class', 'negative');
+        } else {
+            $('#counter-value').attr('class', 'zero');
+        }
+    }
+
+    $('#btn-increase').click(function() { count++; updateUI(); });
+    $('#btn-fast-increase').click(function() { count += 10; updateUI(); });
+    $('#btn-reset').click(function() { count = 0; updateUI(); });
+    
+    $('#btn-decrease').click(function() {
+        if (MIN_VALUE !== null && count <= MIN_VALUE) {
+            alert("Giá trị không được nhỏ hơn " + MIN_VALUE);
+            return;
+        }
+        count--; 
+        updateUI();
+    });
+});
+</script>
+</body>
+</html>
