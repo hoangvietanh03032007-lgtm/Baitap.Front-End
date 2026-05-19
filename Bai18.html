@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài Lab 18 - Quản lý thành viên</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background-color: #f7f9fa; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-group input { flex: 1; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; }
+        .btn { padding: 10px 15px; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        .btn-add { background-color: #2ecc71; color: white; }
+        .btn-edit { background-color: #f39c12; color: white; margin-right: 5px; }
+        .btn-delete { background-color: #e74c3c; color: white; }
+        
+        .member-list { list-style: none; padding: 0; }
+        .member-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: white; margin-bottom: 8px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .member-name { flex-grow: 1; margin-left: 10px; font-size: 1.1rem; }
+        .stt { font-weight: bold; color: #7f8c8d; width: 30px; }
+    </style>
+</head>
+<body>
+
+<h2>QUẢN LÝ DANH SÁCH THÀNH VIÊN</h2>
+
+<div class="input-group">
+    <input type="text" id="member-input" placeholder="Nhập tên thành viên...">
+    <button class="btn btn-add" id="btn-add-member">Thêm mới</button>
+</div>
+
+<ul class="member-list" id="member-list-container">
+    <!-- Các thành viên mặc định mẫu -->
+    <li class="member-item">
+        <span class="stt">1</span>
+        <span class="member-name">Nguyễn Văn A</span>
+        <div>
+            <button class="btn btn-edit">Sửa</button>
+            <button class="btn btn-delete">Xóa</button>
+        </div>
+    </li>
+</ul>
+
+<script>
+$(document).ready(function() {
+
+    function updateSTT() {
+        $('.member-item').each(function(index) {
+            $(this).find('.stt').text(index + 1);
+        });
+    }
+
+    $('#btn-add-member').click(function() {
+        let name = $('#member-input').val().trim();
+        
+        if (name === "") {
+            alert("Vui lòng điền tên thành viên!");
+            return;
+        }
+
+        let newItem = `
+            <li class="member-item">
+                <span class="stt"></span>
+                <span class="member-name">${name}</span>
+                <div>
+                    <button class="btn btn-edit">Sửa</button>
+                    <button class="btn btn-delete">Xóa</button>
+                </div>
+            </li>
+        `;
+
+        $('#member-list-container').append(newItem);
+        $('#member-input').val(""); 
+        updateSTT();
+    });
+
+    $('#member-input').keypress(function(e) {
+        if(e.which == 13) {
+            $('#btn-add-member').click();
+        }
+    });
+
+    $('#member-list-container').on('click', '.btn-delete', function() {
+        if (confirm("Bạn có chắc chắn muốn xóa thành viên này?")) {
+            $(this).closest('.member-item').remove();
+            updateSTT(); 
+        }
+    });
+
+    $('#member-list-container').on('click', '.btn-edit', function() {
+        let nameSpan = $(this).closest('.member-item').find('.member-name');
+        let currentName = nameSpan.text();
+        let newName = prompt("Chỉnh sửa tên thành viên:", currentName);
+        
+        if (newName !== null && newName.trim() !== "") {
+            nameSpan.text(newName.trim());
+        }
+    });
+
+    updateSTT();
+});
+</script>
+
+</body>
+</html>
